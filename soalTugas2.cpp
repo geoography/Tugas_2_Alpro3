@@ -1,12 +1,36 @@
-/*
-Mas Dodo memberikan sebuah bilangan empat digit kepada anda untuk mengklasifikasikannya menjadi 4 tipe:
+#include <iostream>
+using namespace std;
 
-- Bilangan alfa adalah bilangan yang setiap digitnya membentuk pola monoton naik (membesar setiap digitnya) atau monoton turun (mengecil setiap digitnya).
-- Bilangan beta adalah bilangan yang selisih dua digit pertamanya dengan dua digit terakhirnya minimal 30.
-- Bilangan gamma adalah bilangan yang memenuhi persyaratan bilangan alfa dan beta.
-- Bilangan delta adalah bilangan yang tidak memenuhi ketiga syarat di atas.
+int main() {
+    int n;
+    cin >> n;
 
-Buatlah program yang menerima input sebuah bilangan empat digit, lalu mengklasifikasikannya ke dalam salah satu dari empat tipe tersebut.
-*/
+    // Ambil tiap digit
+    int d1 = n / 1000;
+    int d2 = (n / 100) % 10;
+    int d3 = (n / 10) % 10;
+    int d4 = n % 10;
 
-// Hapus komentar yang berisi soal sebelum memasukkan kode untuk jawaban
+    // Cek alfa (monoton naik atau turun)
+    bool naik = (d1 < d2 && d2 < d3 && d3 < d4);
+    bool turun = (d1 > d2 && d2 > d3 && d3 > d4);
+    bool alfa = naik || turun;
+
+    // Cek beta
+    int duaDepan = d1 * 10 + d2;
+    int duaBelakang = d3 * 10 + d4;
+    bool beta = abs(duaDepan - duaBelakang) >= 30;
+
+    // Klasifikasi
+    if (alfa && beta) {
+        cout << "gamma";
+    } else if (alfa) {
+        cout << "alfa";
+    } else if (beta) {
+        cout << "beta";
+    } else {
+        cout << "delta";
+    }
+
+    return 0;
+}
