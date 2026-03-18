@@ -3,6 +3,7 @@ using namespace std;
 
 int main() {
     int n;
+    cout << "Input 4 digit bilangan: ";
     cin >> n;
 
     // Ambil tiap digit
