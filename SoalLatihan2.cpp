@@ -1,81 +1,82 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
-int main() {
+// fungsi untuk menghitung biaya awal (sebelum diskon)
+double hitungBiaya(int jasa, int tujuan, double berat){
+    if (jasa == 1){ // JNE
+        return (tujuan == 1 ? 10000 : 20000) * berat;
+    }
+    else if (jasa == 2){ // SiCepat
+        return (tujuan == 1 ? 8000 : 18000) * berat;
+    }
+    else{ // Gojek (hanya dalam kota)
+        return 12000 * berat;
+    }
+}
+
+// fungsi untuk potong diskon
+double potongDiskon(int jasa, double berat, double biaya){
+    if (jasa == 1 && berat > 10){
+        biaya *= 0.5;
+    }
+    else if (jasa == 2 && berat > 15){
+        biaya = 0;
+    }
+    else if (jasa == 3 && berat > 5){
+        biaya -= 10000;
+    }
+    return biaya;
+}
+
+// fungsi untuk nama jasa
+string getNamaJasa(int jasa){
+    if (jasa == 1) return "JNE";
+    else if (jasa == 2) return "SiCepat";
+    else return "Gojek";
+}
+
+int main(){
+    int jasa, tujuan;
     double berat;
-    int tujuan; // 1 = dalam kota, 2 = luar kota
 
-    cout << "Masukkan berat barang (kg): ";
-    cin >> berat;
+    // input berat
+    do {
+        cout << "Berat barang(kg): ";
+        cin >> berat;
+    } while (berat <= 0); // ulang sampai berat diatas 0 kg
 
-    cout << "Tujuan pengiriman (1 = dalam kota, 2 = luar kota): ";
-    cin >> tujuan;
+    // input tujuan
+    do{
+        cout << "Pilih pengiriman (1 = dalam kota, 2 = luar kota): ";
+        cin >> tujuan;
+    } while (tujuan != 1 && tujuan != 2); // ulang sampai tujuan = 1 atau tujuan = 2
 
-    // ================= JNE =================
-    double biaya_jne;
-    if (tujuan == 1) {
-        biaya_jne = 10000 * berat; // dalam kota
+    // input jasa
+    if (tujuan == 1){
+        do{
+            cout << "Pilih jasa pengiriman:\n";
+            cout << "1. JNE\n2. SiCepat\n3. Gojek\n";
+            cout << "Pilih: ";
+            cin >> jasa;
+        } while (jasa < 1 || jasa > 3);
     } else {
-        biaya_jne = 20000 * berat; // luar kota
+        do{
+            cout << "Pilih jasa pengiriman:\n";
+            cout << "1. JNE\n2. SiCepat\n";
+            cout << "Pilih: ";
+            cin >> jasa;
+        } while (jasa < 1 || jasa > 2);
     }
 
-    // diskon 50% jika > 10 kg
-    if (berat > 10) {
-        biaya_jne *= 0.5;
-    }
+    // hitung biaya lalu langsung dipotong diskon
+    double biaya = hitungBiaya(jasa, tujuan, berat);
+    biaya = potongDiskon(jasa, berat, biaya);
 
-    // ================= SiCepat =================
-    double biaya_sicepat;
-    if (berat > 15) {
-        biaya_sicepat = 0; // gratis ongkir
-    } else {
-        if (tujuan == 1) {
-            biaya_sicepat = 8000 * berat;
-        } else {
-            biaya_sicepat = 18000 * berat;
-        }
-    }
-
-    double biaya_gojek;
-    if (tujuan == 2) {
-        biaya_gojek = -1; // tidak tersedia untuk luar kota
-    } else {
-        biaya_gojek = 12000 * berat;
-
-        // diskon 10.000 jika > 5 kg
-        if (berat > 5) {
-            biaya_gojek -= 10000;
-        }
-
-        // jaga-jaga kalau jadi negatif
-        if (biaya_gojek < 0) biaya_gojek = 0;
-    }
-
-    cout << "\n=== Rincian Biaya ===\n";
-    cout << "JNE      : Rp " << biaya_jne << endl;
-    cout << "SiCepat  : Rp " << biaya_sicepat << endl;
-
-    if (biaya_gojek == -1) {
-        cout << "Gojek    : Tidak tersedia (luar kota)\n";
-    } else {
-        cout << "Gojek    : Rp " << biaya_gojek << endl;
-    }
-
-    double min_biaya = biaya_jne;
-    string ekspedisi = "JNE";
-
-    if (biaya_sicepat < min_biaya) {
-        min_biaya = biaya_sicepat;
-        ekspedisi = "SiCepat";
-    }
-
-    if (biaya_gojek != -1 && biaya_gojek < min_biaya) {
-        min_biaya = biaya_gojek;
-        ekspedisi = "Gojek";
-    }
-
-    cout << "\nEkspedisi termurah: " << ekspedisi
-         << " (Rp " << min_biaya << ")" << endl;
+    // output
+    cout << fixed << setprecision(0); // batasi supaya tidak ada angka di belakang koma
+    cout << "Ekspedisi yang dipilih: " << getNamaJasa(jasa) << endl; // cout nama jasa
+    cout << "Total Biaya: Rp" << biaya << endl; // cout total biaya (setelah dipotong diskon)
 
     return 0;
 }
