@@ -2,12 +2,14 @@
 using namespace std;
 
 int main(){
-    int jasa, tujuan, berat;
-    float kirim;
+    int jasa, tujuan;
+    double berat, kirim;
     string jasaS;
 
-    cout << "Berat barang(kg): "; 
-    cin >> berat; // pertama-tama, input berat badan terlebih dahulu
+    do {
+        cout << "Berat barang(kg): "; 
+        cin >> berat; // pertama-tama, input berat badan terlebih dahulu
+    } while (berat <= 0);
 
     do{
         cout << "Pilih pengiriman (1 = dalam kota, 2 = luar kota): ";
